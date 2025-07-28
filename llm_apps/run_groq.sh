@@ -1,2 +1,2 @@
-export GROQ_API_KEY=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
+export GROQ_API_KEY=xx
 python3 ./run_groq.py
