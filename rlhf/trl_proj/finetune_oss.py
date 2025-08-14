@@ -116,7 +116,7 @@ def infer():
     tokenizer = AutoTokenizer.from_pretrained("openai/gpt-oss-20b")
     # Load the original model first
     model_kwargs = dict(attn_implementation="eager", torch_dtype="auto", use_cache=True, device_map="auto")
-    base_model = AutoModelForCausalLM.from_pretrained("openai/gpt-oss-20b", **model_kwargs).cuda()
+    base_model = AutoModelForCausalLM.from_pretrained("openai/gpt-oss-20b", **model_kwargs)#.cuda()
     # Merge fine-tuned weights with the base model
     peft_model_id = "gpt-oss-20b-multilingual-reasoner"
     model = PeftModel.from_pretrained(base_model, peft_model_id)
@@ -142,4 +142,5 @@ if __name__ == "__main__":
     model, tokenizer = load_model()
     try_model(dataset, tokenizer, model)
     train_model(dataset, tokenizer, model)
+    infer()
 
