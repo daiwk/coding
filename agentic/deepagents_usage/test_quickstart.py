@@ -6,7 +6,6 @@ from deepagents import create_deep_agent
 
 tavily_client = TavilyClient(api_key=os.environ["TAVILY_API_KEY"])
 
-
 def internet_search(
     query: str,
     max_results: int = 5,
@@ -37,7 +36,7 @@ agent = create_deep_agent(
     system_prompt=research_instructions,
 )
 
-result = agent.invoke({"messages": [{"role": "user", "content": "What is langgraph?"}]})
+result = agent.invoke({"messages": [{"role": "user", "content": "帮我查一下2026年5月arxiv上最新的5篇大模型论文"}]})
 
 # Print the agent's response
 print(result["messages"][-1].content)
