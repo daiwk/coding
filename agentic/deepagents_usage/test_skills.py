@@ -5,8 +5,6 @@ from deepagents import create_deep_agent
 from deepagents.backends import LocalShellBackend
 from langgraph.checkpoint.memory import MemorySaver
 
-
-# PYTHON = "~/envtest/bin/python3.11"
 PYTHON = "/opt/homebrew/opt/python@3.11/bin/python3.11"
 
 checkpointer = MemorySaver()
@@ -40,15 +38,17 @@ print(backend.execute(f"{PYTHON} -m pip install arxiv").output)
 agent = create_deep_agent(
     model="ollama:gpt-oss:120b-cloud",
     backend=backend,
-    skills=["/skills/"],
+    skills=[str(root_dir / "skills")],
     checkpointer=checkpointer,
     system_prompt=(
-        "你是一个可以使用本地 shell 的研究助手。"
-        "当需要使用 arxiv-search skill 时，先 read_file 查看 "
-        "/skills/arxiv-search/SKILL.md，"
-        "然后用 execute 运行 /skills/arxiv-search/arxiv_search.py。"
-        "注意：execute 的工作目录是 backend root_dir。"
-        "运行 Python 时必须使用 /opt/homebrew/opt/python@3.11/bin/python3.11，禁止使用 python 或 python3。"
+        "你是一个研究助手。"
+         "如果任务涉及 arXiv 论文检索，必须使用已注册的 arxiv-search skill，"
+        "当需要执行本地 Python 脚本时，必须使用 "
+        "/opt/homebrew/opt/python@3.11/bin/python3.11。"
+        "注意：execute 的工作目录是 backend root_dir；"
+        "执行本地 skill 脚本时使用相对路径，例如 "
+        "skills/arxiv-search/arxiv_search.py，"
+        "不要在 execute 命令里使用 /skills/... 绝对路径。"
     ),
 )
 
@@ -58,12 +58,7 @@ result = agent.invoke(
             {
                 "role": "user",
                 "content": (
-                    "帮我查一下2026年5月arxiv上最新的5篇大模型论文。"
-                    "请使用 /skills/arxiv-search 里的 skill 脚本。"
-                    "运行脚本时必须使用 /opt/homebrew/opt/python@3.11/bin/python3.11。"
-                    "建议查询："
-                    'all:"large language models" AND submittedDate:[202605010000 TO 202605312359]，'
-                    "max-papers 设为 5。"
+                    "帮我查一下arxiv上关于大模型+推荐的的5篇论文。"
                 ),
             }
         ],
